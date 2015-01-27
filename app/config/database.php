@@ -56,7 +56,7 @@ return array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'database'  => 'pacificcasinohotel',
-			'username'  => 'rootr',
+			'username'  => 'root',
 			'password'  => 'password123',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_general_ci',
