@@ -54,14 +54,13 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'vmestddv02.cl6bwsixaww2.ap-southeast-1.rds.amazonaws.com',
-			'database'  => 'estatedb',
-			'username'  => 'est_adm',
-			'password'  => 'est123$$',
+			'host'      => 'localhost',
+			'database'  => 'pacificcasinohotel',
+			'username'  => 'rootr',
+			'password'  => 'password123',
 			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
-            'port'      => '1561'
+			'collation' => 'utf8_general_ci',
+			'prefix'    => ''
 		),
 
 		'pgsql' => array(
