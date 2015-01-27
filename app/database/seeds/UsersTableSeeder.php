@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder {
                 'last_password_change' => new DateTime(date('Y-m-d H:i:s', strtotime("+30 days"))),
                 'created_at'    => new DateTime,
                 'updated_at'    => new DateTime,
-            )
+            ),
             array(
                 'username'      => 'michael.liwanagan',
                 'fullname'      => 'Michael Liwanagan',
