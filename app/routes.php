@@ -107,4 +107,10 @@ Route::group(array('prefix' => 'admin/v1/','before'=>'auth|auth.session|auth.sta
 	Route::get('player/edit/{id}', array('as' => 'player.edit','uses' => 'PlayerController@edit'));
 	Route::post('player/update/{id}', array('as' => 'player.update','before' => 'csrf','uses' => 'PlayerController@update'));
 	
+	//Player Management
+	Route::get('reports', array('as'=>'reports.index','uses' => 'ReportsController@index'));
+	Route::get('reports/deposit', array('as'=>'reports.deposit','uses' => 'ReportsController@deposit'));
+	Route::get('reports/withdraw', array('as'=>'reports.withdraw','uses' => 'ReportsController@withdraw'));
+
+
 });

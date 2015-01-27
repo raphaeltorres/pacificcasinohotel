@@ -15,8 +15,14 @@ class Wallet extends Eloquent {
 
 	public $timestamps = true;
 
+	public function playerdetails()
+	{
+		return $this->belongsto('User','account_id')->select('id','username','fullname');
+	}
+
 	public function account_credits()
 	{
 		return $this->belongsto('User','account_id');
 	}
+
 }

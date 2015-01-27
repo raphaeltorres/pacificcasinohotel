@@ -168,6 +168,22 @@ class PermissionsTableSeeder extends Seeder {
         $permission->date_created = new DateTime;
         $permission->save();
 
+        $permission = new Permission;
+        $permission->perm_name = 'Bought Credits';
+        $permission->perm_key  = 'reports.deposit';
+        $permission->perm_description = '';
+        $permission->visible   = 1;
+        $permission->date_created = new DateTime;
+        $permission->save();
+
+        $permission = new Permission;
+        $permission->perm_name = 'Redeemed Credits';
+        $permission->perm_key  = 'reports.withdraw';
+        $permission->perm_description = '';
+        $permission->visible   = 1;
+        $permission->date_created = new DateTime;
+        $permission->save();
+
         $this->command->info('Permission table seeded!');
     }
 

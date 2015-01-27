@@ -15,8 +15,13 @@ class Fundinout extends Eloquent {
 
 	public $timestamps = true;
 
-	public function account_details()
+	public function operator()
 	{
-		return $this->belongsto('User','onbehalf');
+		return $this->belongsto('User','onbehalf')->select('id','username','fullname');
 	}
+
+	public function wallet()
+    {
+        return $this->hasOne('Wallet', 'id' , 'wallet_id');
+    }
 }
