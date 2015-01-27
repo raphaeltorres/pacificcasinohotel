@@ -9,6 +9,11 @@ class ReportsController extends \BaseController {
 	 */
 	public function deposit()
 	{
+
+		if(ACL::checkUserPermission('reports.deposit') == false){
+			return Redirect::action('dashboard');
+		}
+
 		$fundin 	 = Fundinout::with('wallet','wallet.playerdetails','operator')->where('fundtype', 'fundin')->get();
 		$title 		 = Lang::get('Bought Credits Report');
 
@@ -24,6 +29,10 @@ class ReportsController extends \BaseController {
 
 	public function withdraw()
 	{
+		if(ACL::checkUserPermission('reports.withdraw') == false){
+			return Redirect::action('dashboard');
+		}
+
 		$funout 	 = Fundinout::with('wallet','wallet.playerdetails','operator')->where('fundtype', 'fundout')->get();
 		$title 		 = Lang::get('Reede Credits Report');
 		

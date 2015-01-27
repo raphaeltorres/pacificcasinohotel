@@ -9,7 +9,7 @@ class PlayerController extends \BaseController {
 	 */
 	public function index()
 	{
-		if(ACL::checkUserPermission('settings.user') == false){
+		if(ACL::checkUserPermission('player.index') == false){
 			return Redirect::action('dashboard');
 		}
 
