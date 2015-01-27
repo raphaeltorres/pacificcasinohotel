@@ -62,10 +62,8 @@
                             <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Username</th>
                                         <th>Fullname</th>
-                                        <th><i class="fa fa-fw fa-building text-muted hidden-md hidden-sm hidden-xs"></i>Company</th>
                                         <th><i class="fa fa-fw fa-send-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Email</th>
                                         <th>Status</th>
                                         <th><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Created</th>
@@ -76,10 +74,8 @@
                                     @if (!empty($userList))
                                         @foreach($userList as $row) 
                                     <tr>
-                                        <td>{{ $row->id }}</td>
                                         <td>{{ $row->username }}</td>
                                         <td>{{ $row->fullname }}</td>
-                                        <td>{{ $row->company_name }}</td>
                                         <td>{{ $row->email }}</td>
                                         <td>{{ $status[$row->confirmed]['status'] }}</td>
                                         <td>{{ $row->created_at }}</td>
