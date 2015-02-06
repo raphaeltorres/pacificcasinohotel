@@ -302,7 +302,7 @@
     <div class="page-footer">
       <div class="row">
         <div class="col-xs-12 col-sm-6">
-          <span class="txt-color-white">Align Commerce Dashboard © 2013-2014</span>
+          <span class="txt-color-white">Pacific Casino Hotel © 2015</span>
         </div>
 
         <div class="col-xs-6 col-sm-6 text-right hidden-xs">
@@ -411,6 +411,7 @@
     {{ HTML::script('assets/js/moment.min.js') }}
     {{ HTML::script('assets/js/daterangepicker.js') }}
     {{ HTML::script('assets/js/autoNumeric.js') }}
+    {{ HTML::script('assets/js/plugin/knob/jquery.knob.min.js') }}
     @yield('scripts')
   </body>
 

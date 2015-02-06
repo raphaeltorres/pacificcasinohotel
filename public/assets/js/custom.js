@@ -1,7 +1,54 @@
 $(document).ready(function() {
 
-        $("#loading").hide();
-        $("#content").show();
+      $("#loading").hide();
+      $("#content").show();
+
+      $("#smart-mod-eg1").click(function(e) {
+        $.SmartMessageBox({
+          title : "Winning Number",
+          content : "Please enter the winning number <br> <input class='form-control' type='number' min='0' max='36' id='winning_number' name='winning_number' value=''>",
+          buttons : '[Cancel][Submit]',
+          placeholder : "Winning Number"
+        }, function(ButtonPressed) {
+          if (ButtonPressed === "Submit") {
+            var winning_number = $('#winning_number').val();
+            var numberRegex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+
+            if((numberRegex.test(winning_number)) &&  (winning_number >= 0  && winning_number <= 36)) 
+            {
+              
+              var gameid = $('.channel_id').text();
+              $.ajax({ url: '/admin/v1/games/winnings',
+                data: {gameid: gameid, winning_number: winning_number},
+                type: 'GET',
+                  success: function(output) {
+                      console.log(output)
+                  }
+                });
+
+              $.smallBox({
+                title : "Winning Number",
+                content : "<i class='fa fa-gift'></i> <i>Winning Number is "+ winning_number +"</i>",
+                color : "#659265",
+                iconSmall : "fa fa-check fa-2x fadeInLeft animated",
+                timeout : 3000
+              });
+            }
+            else
+            {
+              $.smallBox({
+                title : "Invalid Winning Number",
+                content : "<i class='fa fa-clock-o'></i> <i>Not a valid winning number. Winning range from 0-36</i>",
+                color : "#C46A69",
+                iconSmall : "fa fa-times fa-2x fadeInRight animated",
+                timeout : 7000
+              });
+            }
+          }
+    
+        });
+        e.preventDefault();
+      })
 
       // Dialog click
       $('.dialog_link').click(function() {
@@ -599,6 +646,7 @@ $(document).ready(function() {
         });
 
       });
+      
 
       jQuery.validator.addMethod("notEqual", function(value, element, param) {
         return this.optional(element) || value != $(param).val();

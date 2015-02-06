@@ -153,6 +153,14 @@ class PermissionsTableSeeder extends Seeder {
         $permission->save();
 
         $permission = new Permission;
+        $permission->perm_name = 'Operate Roulette';
+        $permission->perm_key  = 'games.operate';
+        $permission->perm_description  = 'To allow operators to control roullete game';
+        $permission->visible   = 0;
+        $permission->date_created = new DateTime;
+        $permission->save();
+
+        $permission = new Permission;
         $permission->perm_name = 'Player List';
         $permission->perm_key  = 'player.index';
         $permission->perm_description = '';

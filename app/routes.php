@@ -89,13 +89,13 @@ Route::group(array('prefix' => 'admin/v1/','before'=>'auth|auth.session|auth.sta
 	Route::post('settings/update/{id}', array('as' => 'settings.update','before' => 'csrf','uses' => 'SettingsController@update'));
 
 	//Games Management
-	Route::get('games', array('as' => 'games.index','uses' => 'PlayerController@index'));
-	Route::get('games/roulette', array('as' => 'games.roulette','uses' => 'PlayerController@index'));	
-	Route::get('games/show/{id}', 	array('as'=>'product.show','uses' => 'PlayerController@show'));
-	Route::get('games/create', array('as' => 'product.create','uses' => 'PlayerController@create'));
-	Route::post('games/store', array('as' => 'product.store','before' => 'csrf','uses' => 'PlayerController@store'));
-	Route::get('games/edit/{id}', array('as' => 'product.edit','uses' => 'PlayerController@edit'));
-	Route::post('games/update/{id}', array('as' => 'product.update','before' => 'csrf','uses' => 'PlayerController@update'));
+	Route::get('games', array('as' => 'games.index','uses' => 'GameController@index'));
+	Route::get('games/roulette', array('as' => 'games.roulette','uses' => 'GameController@index'));	
+	Route::get('games/show/{id}', 	array('as'=>'games.show','uses' => 'GameController@show'));
+	Route::get('games/operate', array('as' => 'games.operate','uses' => 'GameController@operate'));
+	Route::any('games/winnings', array('as' => 'games.winnings','uses' => 'GameController@winnings'));
+	Route::get('games/edit/{id}', array('as' => 'games.edit','uses' => 'GameController@edit'));
+	Route::put('games/update/{id}', array('as' => 'games.update','before' => 'csrf','uses' => 'GameController@update'));
 
 	//Player Management
 	Route::get('player', array('as' => 'player.index','uses' => 'PlayerController@index'));
