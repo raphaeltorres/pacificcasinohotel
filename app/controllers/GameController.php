@@ -45,9 +45,18 @@ class GameController extends \BaseController {
 			'operator_id'  => Auth::user()->id
 		);
 
-		// $channel = Gamechannel::create($create_channel);
+		if (Session::has('game_session'))
+		{
+			$game_session = Session::get('game_session');
+		}
+		else
+		{
+			$channel = Gamechannel::create($create_channel);
+			$game_session = $channel->id;
+			Session::put('game_session', $game_session);
+		}
 
-		$gamedetails  = Gamechannel::with('gamedetails','operator','bets','bets.playerdetails')->find(1);
+		$gamedetails  = Gamechannel::with('gamedetails','operator','bets','bets.playerdetails')->find($game_session);
 
 		$totalbets 	  = 0;
 		$totalplayers = 0; 
@@ -78,7 +87,7 @@ class GameController extends \BaseController {
 
 		$rules = array(
 			'gameid'	 	 => 'required|exists:game_channel,id',
-			'winning_number' => 'required');
+			'winning_number' => 'required|integer|between:0,36');
 
 		//custom error messaging
 		$messages = array(
@@ -97,15 +106,95 @@ class GameController extends \BaseController {
 			Gamechannel::where('id',$param['gameid'])->update(array('channel_status' => 0));
 
 			$bets = Gamebets::with('channel','payout')->where('channel_id', $param['gameid'])->get();
-			$player_winnings = array();
+			$bet_win = array();
+
 			foreach ($bets as $row) {
 				$win  = false; 
-
-				switch ($row->bet_type) 
+				switch ($row->payout->name) 
 				{
 					case "straight":
 						if($row->bet_number == $param['winning_number'])
 						{	
+							$win = true;
+						}
+					break;
+
+					case "split":
+						$numbers = explode(",", $row->bet_number);
+						if(in_array($param['winning_number'], $numbers))
+						{
+							$win = true;
+						} 
+					break;
+
+					case "line":
+						$numbers = explode(",", $row->bet_number);
+						if(in_array($param['winning_number'], $numbers))
+						{
+							$win = true;
+						} 
+					break;
+
+					case "square":
+						$numbers = explode(",", $row->bet_number);
+						if(in_array($param['winning_number'], $numbers))
+						{
+							$win = true;
+						} 
+					break;
+
+					case "basket":
+						$numbers = explode(",", $row->bet_number);
+						if(in_array($param['winning_number'], $numbers))
+						{
+							$win = true;
+						} 
+					break;
+
+					case "1stcolumn":
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
+							$win = true;
+						}
+					break;
+
+					case "2ndcolumn":
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
+							$win = true;
+						}
+					break;
+
+					case "3rdcolumn":
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
+							$win = true;
+						}
+					break;
+
+					case "1dozen":
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
+							$win = true;
+						}
+					break;
+
+					case "2dozen":
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
+							$win = true;
+						}
+					break;
+
+					case "3dozen":
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
 							$win = true;
 						}
 					break;
@@ -125,7 +214,11 @@ class GameController extends \BaseController {
 					break;
 			
 					default:
-						// echo $row->bet_amount . '<br />';
+						$numbers_covered = explode(',',$row->payout->numbers_covered);
+						if(in_array($param['winning_number'], $numbers_covered))
+						{
+							$win = true;
+						}
 				}
 
 				if($win == true)
@@ -136,7 +229,7 @@ class GameController extends \BaseController {
 
 					Gamebets::where('id',$row->id)->update($update);
 					$this->player_winnings($row->payout->payout,$row->player_id,$row->bet_amount,$row->channel->channel_id);
-					$player_winnings[] = $row->player_id;
+					$bet_win[] = $row->id;
 				}
 				elseif($win == false)
 				{
@@ -145,12 +238,29 @@ class GameController extends \BaseController {
 						'bet_status' => 0);
 
 					Gamebets::where('id',$row->id)->update($update);
-				}
-				
+				} 
 			}
 
-			
-			echo json_encode($player_winnings);
+			if(count($bet_win) > 0)
+			{
+				$player_winnings = Gamebets::with('payout','playerdetails')->whereIn('id',$bet_win)->get();
+
+				if(!empty($player_winnings->first()))
+				{
+					$response = array(
+        	 		'betwin'  => true,		
+        			'message' => 'List of players who won.',
+        			'data'    => $player_winnings->toArray());
+				}	
+			}
+			else
+			{
+        	 	$response = array(
+        	 		'betwin'	=> false,
+        			'message' 	=> 'No player has won this game.');
+			}
+
+			Session::forget('game_session');
 		}
 		else
 		{
@@ -159,13 +269,12 @@ class GameController extends \BaseController {
 
 			 //response if merchant doesnt have list of products.
         	 $response = array(
-        	 		'status'		 => 404,
+        	 		'betwin'		 => 404,
         			'error'			 => 'not_found',
         			'error_message' => $messages->all());
-
-        	 echo json_encode($response);
 		}
 		
+		echo json_encode($response);
 	}
 
 	/**

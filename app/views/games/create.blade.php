@@ -23,8 +23,9 @@
 				
 												<div class="col-sm-12">
 													<div id="myCarousel" class="carousel fade profile-carousel">
-														<div class="air air-bottom-right padding-10">
-														 <a href="javascript:void(0);" id="smart-mod-eg1" class="btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-gift"></i> Winning Number</a>
+														<div class="air air-bottom-right padding-10 button">
+														 <a href="javascript:void(0);" class="btn txt-color-white bg-color-teal btn-sm roulette-game" style="display:none;"><i class="fa fa-check"></i> Create Roulette Game</a>
+														 <a href="javascript:void(0);" id="smart-mod-eg1" class="button-winning btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-gift"></i> Winning Number</a>
 														</div>
 														<div class="air air-top-left padding-10">
 															<h4 class="txt-color-white font-md"></h4>
@@ -180,6 +181,53 @@
 										</div>
 				
 									</div>
+
+						<div class="col-sm-12 col-md-12 col-lg-6 player-winnings" style="display:none;">
+							
+							<div class="jarviswidget well" id="wid-id-3" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+								<header>
+									<span class="widget-icon"> 
+									<i class="fa fa-comments"></i> </span>
+									<h2>Default Tabs with border </h2>
+				
+								</header>
+				
+								<!-- widget div-->
+								<div>
+				
+									<!-- widget edit box -->
+									<div class="jarviswidget-editbox">
+										<!-- This area used as dropdown edit box -->
+				
+									</div>
+									<!-- end widget edit box -->
+				
+									<!-- widget content -->
+									<div class="widget-body">
+
+										<ul id="myTab1" class="nav nav-tabs bordered">
+											<li class="active">
+												<a href="#s1" data-toggle="tab">Winning Player 
+													<span class="badge bg-color-blue txt-color-white">12</span>
+												</a>
+											</li>
+										</ul>
+				
+										<div id="myTabContent1" class="tab-content padding-10">
+											<div class="tab-pane fade in active" id="s1">
+												
+											</div>
+										</div>
+				
+									</div>
+									<!-- end widget content -->
+				
+								</div>
+								<!-- end widget div -->
+				
+							</div>
+							<!-- end widget -->
+									</div>
 								</div>
 							</div>
 				
@@ -188,4 +236,5 @@
 				</div>
 				
 				<!-- end row -->
+</div>
 @stop

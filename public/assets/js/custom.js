@@ -21,18 +21,55 @@ $(document).ready(function() {
               $.ajax({ url: '/admin/v1/games/winnings',
                 data: {gameid: gameid, winning_number: winning_number},
                 type: 'GET',
-                  success: function(output) {
-                      console.log(output)
+                  success: function(response) {
+                      var json = $.parseJSON(response);
+                      var html = '<table class="table table-bordered table-condensed"><thead><th>Playername</th><th>Bet Amount</th><th>Bet</th><th>Winnings</th></tr></thead><tbody>';
+                       
+                      if(json.betwin == true)
+                      {
+                          $.each(json.data, function (item, value) {
+                          var payout = value.payout;
+                          var player = value.playerdetails;
+                          var total_winnings = parseFloat(value.bet_amount *  payout.payout) + parseFloat(value.bet_amount);
+
+                          html += '<tr>';
+                          html += '<td>' + player.username + '</td>';
+                          html += '<td>$ ' + value.bet_amount + '</td>';
+                          html += '<td>' + value.bet_number + '</td>';
+                          html += '<td>$ ' + total_winnings + '</td>';
+                          html += '</tr>'
+                        });
+
+                        html += '</tbody></table>';
+                        $("#myTabContent1").after(html);
+                        // $(".player-winnings").css("display","block");
+                        $(".player-winnings").slideToggle('slow');
+
+                        $.smallBox({
+                          title : "Winning Number",
+                          content : "<i class='fa fa-gift'></i> <i>Winning Number is "+ winning_number +"</i>",
+                          color : "#659265",
+                          iconSmall : "fa fa-check fa-2x fadeInLeft animated",
+                          timeout : 3000
+                        });
+                      }
+                      else
+                      {
+                        $.smallBox({
+                          title : "No Winning Player",
+                          content : "<i class='fa fa-clock-o'></i> <i>"+ json.message +"</i>",
+                          color : "#C46A69",
+                          iconSmall : "fa fa-times fa-2x fadeInRight animated",
+                          timeout : 7000
+                        });
+                      }
+                    
+                    $(".button-winning").remove();
+                    $(".roulette-game").slideToggle();
                   }
                 });
 
-              $.smallBox({
-                title : "Winning Number",
-                content : "<i class='fa fa-gift'></i> <i>Winning Number is "+ winning_number +"</i>",
-                color : "#659265",
-                iconSmall : "fa fa-check fa-2x fadeInLeft animated",
-                timeout : 3000
-              });
+              
             }
             else
             {
@@ -58,6 +95,10 @@ $(document).ready(function() {
         $('#dialog_simple').dialog('open');
         return false;
     
+      });
+
+      $('.roulette-game').click(function() {
+          location.reload();
       });
 
       // Dialog click withdraw_dialog
