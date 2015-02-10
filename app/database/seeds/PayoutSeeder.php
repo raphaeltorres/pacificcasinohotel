@@ -81,7 +81,7 @@ class PayoutSeeder extends Seeder {
             ),
             array(
                 'bet'           => 'Column',
-                'name'          => '3ndcolumn',
+                'name'          => '3rdcolumn',
                 'payout'        => '2',
                 'percentage'    => '31.58',
                 'numbers_covered'=> '3,6,9,12,15,18,21,24,27,30,33,36',

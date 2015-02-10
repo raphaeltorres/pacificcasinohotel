@@ -39,6 +39,8 @@ Route::group(array('prefix' => 'admin/v1/'), function()
 	
 });
 
+
+
 // Route group for API versioning
 // Route::group(array('prefix' => 'admin/v1/','before'=>'auth|auth.session|auth.status|password_change|password_expiry'), function()
 Route::group(array('prefix' => 'admin/v1/','before'=>'auth|auth.session|auth.status|check_merchant'), function()
@@ -112,5 +114,8 @@ Route::group(array('prefix' => 'admin/v1/','before'=>'auth|auth.session|auth.sta
 	Route::get('reports/deposit', array('as'=>'reports.deposit','uses' => 'ReportsController@deposit'));
 	Route::get('reports/withdraw', array('as'=>'reports.withdraw','uses' => 'ReportsController@withdraw'));
 
-
+	//Bet
+	Route::any('bet', array('as'=>'bet.index','uses' => 'BetController@index'));
+	Route::any('bet/roulette', array('as'=>'bet.roulette','uses' => 'BetController@roulette'));
+	Route::post('bet/place', array('as'=>'bet.place','uses' => 'BetController@store'));
 });

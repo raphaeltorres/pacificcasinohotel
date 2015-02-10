@@ -48,10 +48,18 @@ font-family: FontAwesome;
 content: "\f07a"; 
 }
 
+
 i.nav-fa-games:before{
 font-family: FontAwesome; 
 content: "\f11b"; 
 }
+
+i.nav-fa-bet:before{
+font-family: FontAwesome; 
+content: "\f0d6"; 
+}
+
+
 
 #loading{
    position: absolute;
@@ -59,7 +67,7 @@ content: "\f11b";
    left: 53%;
 }
 
-#content{
+/*#content{
 	display: none;
-}
+}*/
         

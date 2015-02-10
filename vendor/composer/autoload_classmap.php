@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'ACL' => $baseDir . '/app/library/ACL.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
+    'BetController' => $baseDir . '/app/controllers/BetController.php',
     'Bllim\\Datatables\\Datatables' => $vendorDir . '/bllim/datatables/src/Bllim/Datatables/Datatables.php',
     'Bllim\\Datatables\\DatatablesServiceProvider' => $vendorDir . '/bllim/datatables/src/Bllim/Datatables/DatatablesServiceProvider.php',
     'Bllim\\Datatables\\Facades\\Profiler' => $vendorDir . '/bllim/datatables/src/Bllim/Datatables/Facade/Datatables.php',
@@ -78,6 +79,7 @@ return array(
     'GameTableSeeder' => $baseDir . '/app/database/seeds/GameTableSeeder.php',
     'Gamebets' => $baseDir . '/app/models/Gamebets.php',
     'Gamechannel' => $baseDir . '/app/models/Gamechannel.php',
+    'Gamepayouts' => $baseDir . '/app/models/Gamepayouts.php',
     'Games' => $baseDir . '/app/models/Games.php',
     'Gamewinnings' => $baseDir . '/app/models/Gamewinnings.php',
     'Group' => $baseDir . '/app/models/Group.php',

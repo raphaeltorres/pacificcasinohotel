@@ -33,6 +33,11 @@ class User extends Eloquent implements UserInterface{
 
 	protected $hidden = array('password');
 
+    public function wallet()
+    {
+        return $this->hasOne('Wallet', 'account_id' , 'id');
+    }
+
     public function user_member()
     {
         return $this->hasOne('UserMember', 'user_id' , 'id');
