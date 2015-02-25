@@ -15,69 +15,155 @@ class GameController extends \BaseController {
 
 		$title 		 = Lang::get('Roulette Game List');
 		
-		$channellist = Gamechannel::with('gamedetails','operator')->get();
-
+		$tablelist = Gametables::with('gamedetails', 'operator')->get();
+		
 		$data = array(
 			'acl' 		=> ACL::buildACL(), 
-			'gamelist'	=> $channellist,
+			'tablelist'	=> $tablelist,
 			'title'		=> $title);
 
 		return View::make('games/index',$data);
 	}
 
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function operate()
+	public function create()
 	{
-		if(ACL::checkUserPermission('games.operate') == false){
+
+		if(ACL::checkUserPermission('games.create') == false){
 			return Redirect::action('dashboard');
 		}
 
-		$game = Games::where('game_name', 'Roulette')->take(1)->get()->first();
+		$title 	   = Lang::get('Roulette Table');
+		$formOpen  = Form::open(array('method' => 'post', 'id' => 'form-group','class' => 'smart-form', 'route' => array('games.store')));
+		$formClose = Form::close();		
+		$operators = Usermember::with('group','user')->where('group_id', 3)->get();
 
-		$create_channel = array(
-			'channel_id'   => Utils::generateRandomString(),
-			'game_id'      => $game->id,
-			'operator_id'  => Auth::user()->id
-		);
+		$data = array(
+					'title' => $title,
+					'operators' => $operators, 
+					'formOpen'  => $formOpen,
+					'formClose' => $formClose);
 
-		if (Session::has('game_session'))
+		return View::make('games/create',$data);
+	}
+
+	public function store()
+	{
+		//retrieve POST value
+		$param = Input::only('tablename','operator');
+
+		$rules = array(
+			'tablename'	=> 'required',
+			'operator' 	=> 'required|exists:acl_users,id');
+
+		//custom error messaging
+		$messages = array(
+				'operator.exists'	 => 'Operator doesn\'t exist');
+
+		$validator = Validator::make($param, $rules, $messages);
+
+		if ($validator->passes())
 		{
-			$game_session = Session::get('game_session');
+			$create = array(
+				'game_id'     => 1,
+				'table_name'  => $param['tablename'],
+				'operator_id' => $param['operator']
+				);
+
+			$gametables = Gametables::create($create);
+
+			$message = 'Roullete Table has been successfully created.';
+			return Redirect::action('games.index')->with('success', $message);
 		}
 		else
 		{
-			$channel = Gamechannel::create($create_channel);
-			$game_session = $channel->id;
-			Session::put('game_session', $game_session);
+			$messages = $validator->messages();
+			return Redirect::action('games.create')->with('error', $messages->all());
+		}
+	}
+
+	public function edit($id)
+	{
+		if(ACL::checkUserPermission('games.edit') == false){
+			return Redirect::action('dashboard');
 		}
 
-		$gamedetails  = Gamechannel::with('gamedetails','operator','bets','bets.playerdetails')->find($game_session);
+		$title 	   	  = Lang::get('Roulette Table');
+		$formOpen  	  = Form::open(array('method' => 'put', 'id' => 'form-group','class' => 'smart-form', 'route' => array('games.update', $id)));
+		$formClose 	  = Form::close();		
+		$operators 	  = Usermember::with('group','user')->where('group_id', 3)->get();
+		$tabledetails = Gametables::find($id);
 
-		$totalbets 	  = 0;
-		$totalplayers = 0; 
-
-		if($gamedetails->bets != null)
+		if(!empty($tabledetails))
 		{
-			foreach ($gamedetails->bets as $gamebets) {
-				$totalbets += $gamebets->bet_amount;
-				$totalplayers++;
-			}
+			$data = array(
+					'title' => $title,
+					'operators' => $operators,
+					'tabledetails' => $tabledetails, 
+					'formOpen'  => $formOpen,
+					'formClose' => $formClose);
+
+			return View::make('games/edit',$data);
+		}
+		else
+		{
+			$message = 'Cannot find roulette game table.';
+			return Redirect::action('games.index')->with('error', $message);
 		}
 
-		$title 		= Lang::get('Roulette Game');
+	}
 
-		$data = array(
-			'title' 	   => $title,
-			'totalbets'	   => $totalbets,
-			'totalplayers' => $totalplayers,
-			'gamedetails'  => $gamedetails);
+		/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
+		$tabledetails = Gametables::find($id);
+		//retrieve PUT value
+		$param = Input::only('tablename','operator');
 
-		return View::make('games/create', $data);
+		$rules = array(
+			'tablename'	=> 'required',
+			'operator' 	=> 'required|exists:acl_users,id');
+
+		//custom error messaging
+		$messages = array(
+				'operator.exists'	 => 'Operator doesn\'t exist');
+
+		$validator = Validator::make($param, $rules, $messages);
+
+		if(!empty($tabledetails))
+		{
+			if ($validator->passes())
+			{
+				$update = array(
+					'table_name'  => $param['tablename'], 
+					'operator_id' => $param['operator'] 
+					);
+
+				$affectedRows = Gametables::where('id',$id)->update($update);
+
+
+				$message = 'Roullete Table has been successfully created.';
+				return Redirect::action('games.index')->with('success', $message);
+			}
+			else
+			{
+				$messages = $validator->messages();
+				return Redirect::action('games.edit',array($id))->with('error', $messages->all());
+			}
+			
+		}
+		else
+		{
+			$message = 'Cannot find roulette game table.';
+			return Redirect::action('games.index')->with('error', $message);
+		}
+		
+
+		echo json_encode(Input::all());
 	}
 
 	public function winnings()
@@ -259,8 +345,6 @@ class GameController extends \BaseController {
         	 		'betwin'	=> false,
         			'message' 	=> 'No player has won this game.');
 			}
-
-			Session::forget('game_session');
 		}
 		else
 		{
@@ -287,31 +371,6 @@ class GameController extends \BaseController {
 	{
 		//
 	}
-
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
 
 	/**
 	 * Remove the specified resource from storage.

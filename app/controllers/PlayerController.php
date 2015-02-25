@@ -13,7 +13,7 @@ class PlayerController extends \BaseController {
 			return Redirect::action('dashboard');
 		}
 
-		$userList   = UserMember::with('user','group','wallet')->where('group_id', 4)->get();
+		$userList   = UserMember::with('user','group','wallet','operator.opdetails')->where('group_id', 4)->get();
 		$title 		= Lang::get('Player List');
 		$status 	= array('0' => array('label'   => 'default' ,'status'  => 'Inactive'), 
 					    	'1' => array('label'  => 'success', 'status' => 'Active'));
@@ -44,13 +44,13 @@ class PlayerController extends \BaseController {
 		$title 	   = Lang::get('Add Player');
 		$formOpen  = Form::open(array('method' => 'post', 'id' => 'form-player','class' => 'smart-form', 'route' => array('player.store')));
 		$formClose = Form::close();
-		$groupList = ACL::getAllGroup();
+		$operators = Usermember::with('group','user')->where('group_id', 3)->get();
 
 		$data = array(
 			'formOpen'  => $formOpen, 
 			'formClose' => $formClose,
-			'groupList' => $groupList,
-			'title'		=> $title
+			'title'		=> $title,
+			'operators' => $operators,
 			);
 
 		return View::make('player/create', $data);
@@ -204,11 +204,19 @@ class PlayerController extends \BaseController {
 			return Redirect::action('dashboard');
 		}
 
+		$param  = Input::only('username','email','fullname','company','credits', 'operator');
+
 		$rules = array(
     			'username' => 'required|unique:acl_users|alpha_num',
-    			'email'    => 'email|unique:acl_users');
+    			'email'    => 'email|unique:acl_users',
+    			'operator' => 'required|exists:acl_users,id');
 
-		$validator = Validator::make(Input::all(), $rules);
+		//custom error messaging
+		$messages = array(
+				'operator.exists'	 => 'Operator doesn\'t exist',
+				'operator.required'  => 'Select an operator for this player.');
+
+		$validator = Validator::make($param, $rules,$messages);
 
 		if ($validator->fails())
 		{
@@ -217,12 +225,10 @@ class PlayerController extends \BaseController {
 		}
 		else
 		{
-
+			
 			$player_group_id = Group::where('name' , 'Player')->firstOrFail();
 			
-			$param 		= Input::only('username','email','fullname','company','credits');
-
-			$days = new DateTime(date('Y-m-d H:i:s', strtotime("+30 days")));
+			$days	= new DateTime(date('Y-m-d H:i:s', strtotime("+30 days")));
 
 			$player_account = array(
 				'username'  => $param['username'],
@@ -238,6 +244,17 @@ class PlayerController extends \BaseController {
                 'updated_at'    => new DateTime);
 
 			$add_account = User::create($player_account);
+
+
+			if (Input::has('operator'))
+			{
+				$operator = array(
+					'player_id'   => $add_account->id, 
+					'operator_id' => $param['operator']
+					);
+
+				$assign_operator = Playeroperators::create($operator);
+			}
 
 			$user_member = array(
 				'user_id'  		=> $add_account->id,
@@ -272,6 +289,7 @@ class PlayerController extends \BaseController {
 		catch(Exception $e){
 			return false;
 		}
+
 			$message = 'Player has been created';
     		return Redirect::action('player.index')->with('success', $message);
 		}
