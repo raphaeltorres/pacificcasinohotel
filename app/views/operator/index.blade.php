@@ -65,7 +65,6 @@
                                         <th><i class="fa fa-fw fa-gamepad text-muted hidden-md hidden-sm hidden-xs"></i> Table Name</th>
                                         <th><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Operator</th>
                                         <th><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Created</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -75,16 +74,8 @@
                                         <td>{{ $row->table_name }} </td>
                                         <td>{{ $row->operator->username }}</td>
                                         <td>{{ $row->created_at }}</td>
-                                        <td>
-
-                                            @if (array_key_exists('user.edit',$acl['access']))
-                                            <a href="{{{ URL::to('admin/v1/games/edit') }}}/{{ $row->id }}" class="btn btn-sm btn-success">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </a>
-                                            @endif
-                                        </td>
                                     </tr>
-                                        @endforeach
+                                    @endforeach
                                     @endif
                                 </tbody>
                             </table>

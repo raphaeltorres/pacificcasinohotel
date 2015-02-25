@@ -62,7 +62,8 @@
                             <table id="dt_basic" class="table table-striped table-bordered" width="100%">
                                 <thead>
                                     <tr>
-                                        <th><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Username</th>
+                                        <th><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> PlayerName</th>
+                                        <th>Operator</th>
                                         <th>Fullname</th>
                                         <th><i class="fa fa-fw fa-send-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Email</th>
                                         <th><i class="fa fa-fw fa-money txt-color-blue hidden-md hidden-sm hidden-xs"></i> Credits</th>
@@ -76,6 +77,7 @@
                                         @foreach($userList as $row) 
                                     <tr>    
                                         <td>{{ $row->user->username }}</td>
+                                        <td>{{ $row->operator->opdetails->username }}</td>
                                         <td>{{ $row->user->fullname }}</td>
                                         <td>{{ $row->user->email }}</td>
                                         @if($row->wallet != null)

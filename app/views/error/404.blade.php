@@ -481,17 +481,16 @@
 							<div class="col-sm-12">
 								<div class="text-center error-box">
 									<h1 class="error-text-2 bounceInDown animated"> Error 404 <span class="particle particle--c"></span><span class="particle particle--a"></span><span class="particle particle--b"></span></h1>
-									<?php $messages = array('We need a map.', 'I think we\'re lost.', 'We took a wrong turn.'); ?>
-									<h2 class="font-xl"><strong><i class="fa fa-fw fa-warning fa-lg text-warning"></i> Page Not Found , <?php echo $messages[mt_rand(0, 2)]; ?></strong></h2>
+									<h2 class="font-xl"><strong><i class="fa fa-fw fa-warning fa-lg text-warning"></i> {{ $message }} </strong></h2>
 									<br />
-									<p class="lead">What does this mean?</p>
+				<!-- 					<p class="lead">What does this mean?</p>
 									<p class="lead">
 										We couldn't find the page you requested on our servers. We're really sorry about that.
 									</p>
 									<p class="font-md">
 										<b>... That didn't work on you? Dang. May we suggest a search, then?</b>
 									</p>
-									<br>
+									<br> -->
 									<div class="error-search well well-lg padding-10">
 										<div class="input-group">
 											<input class="form-control input-lg" type="text" placeholder="let's try this again" id="search-error">

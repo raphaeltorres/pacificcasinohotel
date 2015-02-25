@@ -57,7 +57,7 @@ class UsersTableSeeder extends Seeder {
 
         DB::table('acl_users')->insert( $users );
         
-        foreach(range(1,3) as $index){
+        foreach(range(1,2) as $index){
             $usermember = new UserMember;
             $usermember->user_id  = $index;
             $usermember->group_id = $index;

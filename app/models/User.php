@@ -45,7 +45,7 @@ class User extends Eloquent implements UserInterface{
 
     public function group_member()
     {
-        return $this->hasOne('Groups', 'group_id');
+        return $this->hasMany('Group');
     }
 
 
@@ -236,6 +236,33 @@ class User extends Eloquent implements UserInterface{
             date('i',$cd), date('s',$cd), date('m',$cd)+$mth,
             date('d',$cd)+$day, date('Y',$cd)+$yr));
         return $expirydate;
+    }
+
+
+    public function isAdmin()
+    {
+        $isAdmin = UserMember::with('group')->where('user_id', Auth::user()->id)->get();
+
+        foreach ($isAdmin as $group) {
+           if (strpos(strtolower($group->group->name),'admin') !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isOperator()
+    {
+        $isAdmin = UserMember::with('group')->where('user_id', Auth::user()->id)->get();
+
+        foreach ($isAdmin as $group) {
+           if (strpos(strtolower($group->group->name),'operator') !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

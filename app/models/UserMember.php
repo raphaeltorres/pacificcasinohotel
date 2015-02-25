@@ -18,6 +18,11 @@ class UserMember extends Eloquent {
 		return $this->belongsTo('User', 'user_id', 'id');
 	}
 
+	public function operator()
+	{
+		return $this->belongsTo('Playeroperators', 'user_id', 'player_id');
+	}
+
 	public function group()
 	{
 		return $this->belongsTo('Group', 'group_id', 'id');

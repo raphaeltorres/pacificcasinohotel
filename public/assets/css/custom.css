@@ -60,7 +60,10 @@ font-family: FontAwesome;
 content: "\f0d6"; 
 }
 
-
+i.nav-fa-roulette:before{
+font-family: FontAwesome; 
+content: "\f108"; 
+}
 
 #loading{
    position: absolute;

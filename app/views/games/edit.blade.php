@@ -18,9 +18,9 @@
 		<article class="col-sm-12 col-md-12 col-lg-6">
 
 			<!-- Widget ID (each widget will need unique ID)-->
-			<div class="jarviswidget" id="wid-id-useredit" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false">
+			<div class="jarviswidget" id="wid-id-playeradd" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false">
 				<header>
-					<span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
 					<h2>{{$title}}</h2>				
 					
 				</header>
@@ -40,83 +40,38 @@
 						
 						{{$formOpen}}
 						{{ Form::token() }}
-							<header>Edit User Form</header>
 
 							<fieldset>
-								<section>
-									<label class="input"> <i class="icon-append fa fa-user"></i>
-										{{Form::text('username', $userInfo->username, array('placeholder' => 'Username','id' => 'username'))}}
-										<b class="tooltip tooltip-bottom-right">Needed to enter the webtool</b> </label>
-								</section>
-								
-								<section>
-									<label class="input"> <i class="icon-append fa fa-envelope-o"></i>
-										{{Form::text('email', $userInfo->email, array('placeholder' => 'Email address','id' => 'email'))}}
-										<b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
+								<section class="col col-6">
+									<label class="input"> <i class="icon-append fa fa-gear"></i>
+										<input type="text" name="tablename" id="tablename" placeholder="Table Name" value="{{ $tabledetails->table_name }}">
+										<b class="tooltip tooltip-bottom-right">Roulette Table Name</b> </label>
 								</section>
 
-								<section>
-									<label class="input"> <i class="icon-append fa fa-lock"></i>
-										<input type="password" name="changepassword" placeholder="Change Password" id="changepassword">
-										<b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-								</section>
-
-								<section>
-									<label class="input"> <i class="icon-append fa fa-lock"></i>
-										<input type="password" name="changePasswordConfirm" placeholder="Confirm password">
-										<b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-								</section>
-							</fieldset>
-
-							<fieldset>
-								<div class="row">
-									<section class="col col-6">
-										<label class="input">
-											{{Form::text('fullname', $userInfo->fullname, array('placeholder' => 'Full name','id' => 'fullname'))}}
-										</label>
+								<section class="col col-6">
+										<label class="select">
+											<select name="operator">
+												<option value="" disabled="">Assign Operator</option>
+												  @if (!empty($operators))
+                                       				@foreach($operators as $row)
+                                       						@if($row->user_id == $tabledetails->operator_id)
+                                       							<option selected="" value="{{ $row->user_id }}">{{ $row->user->username }}</option>
+                                       						@else
+                                       							<option value="{{ $row->user_id }}">{{ $row->user->username }}</option>
+                                       						@endif
+                                       				@endforeach	
+                                       			  @endif	 
+											</select> <i></i> </label>
 									</section>
-									<section class="col col-6">
-										<label class="input">
-											{{Form::text('company', $userInfo->company_name, array('placeholder' => 'Company','id' => 'company'))}}
-										</label>
-									</section>
-								</div>
-								<section>
-									<label class="label">Account Status</label>
-										<div class="inline-group">
-											<label class="radio">
-												{{Form::radio('confirm', '1', ( ($userInfo->confirmed == 1) ? true : false) )}}
-														<i></i>Active
-											</label>
+							
 
-											<label class="radio">
-												{{Form::radio('confirm', '0', ( ($userInfo->confirmed == 0) ? true : false) )}}
-														<i></i>Inactive</label>
-											</label>
-		
+							</fieldset>							
 
-										</div>
-								</section>
-								@if (!empty($groupList))
-								<!-- roles -->
-								<section class="col col-5">
-									<label class="label">Group</label>
-										@foreach($groupList as $row)
-										<label class="toggle">
-											{{ Form::checkbox('usermember[]', $row->id, in_array($row->id, $userMember), ['type'=>'checkbox']) }}		
-											<i data-swchon-text="ON" data-swchoff-text="OFF"></i> {{ $row->name }}
-										</label>
-										@endforeach
-											
-								</section>
-								<!-- ./ roles --> 
-								@endif
-							</fieldset>
 							<footer>
 								<button type="submit" class="btn btn-primary">
 									Submit Form
 								</button>
-								<a href="{{{ URL::action('settings.user') }}}" class="btn btn-danger">Cancel</a>
+								<a href="{{{ URL::action('games.index') }}}" class="btn btn-danger">Cancel</a>
 							</footer>
 						{{$formClose}}					
 						

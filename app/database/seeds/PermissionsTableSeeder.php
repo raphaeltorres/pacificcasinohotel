@@ -153,9 +153,17 @@ class PermissionsTableSeeder extends Seeder {
         $permission->save();
 
         $permission = new Permission;
-        $permission->perm_name = 'Operate Roulette';
-        $permission->perm_key  = 'games.operate';
-        $permission->perm_description  = 'To allow operators to control roullete game';
+        $permission->perm_name = 'Roulette Tables';
+        $permission->perm_key  = 'games.create';
+        $permission->perm_description = '';
+        $permission->visible   = 0;
+        $permission->date_created = new DateTime;
+        $permission->save();
+
+        $permission = new Permission;
+        $permission->perm_name = 'Roulette Edit';
+        $permission->perm_key  = 'games.edit';
+        $permission->perm_description = '';
         $permission->visible   = 0;
         $permission->date_created = new DateTime;
         $permission->save();
@@ -195,6 +203,14 @@ class PermissionsTableSeeder extends Seeder {
         $permission = new Permission;
         $permission->perm_name = 'Roulette';
         $permission->perm_key  = 'bet.roulette';
+        $permission->perm_description = '';
+        $permission->visible   = 1;
+        $permission->date_created = new DateTime;
+        $permission->save();
+
+        $permission = new Permission;
+        $permission->perm_name = 'Start Game';
+        $permission->perm_key  = 'roulette.start';
         $permission->perm_description = '';
         $permission->visible   = 1;
         $permission->date_created = new DateTime;

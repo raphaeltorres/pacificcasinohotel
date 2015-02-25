@@ -40,7 +40,7 @@
 						
 						{{$formOpen}}
 						{{ Form::token() }}
-							<header>Player Form</header>
+							<header>Player Credentials</header>
 
 							<fieldset>
 								<section>
@@ -67,14 +67,21 @@
 										</label>
 									</section>
 									<section class="col col-6">
-										<label class="input">
-											<input type="text" name="company" placeholder="Company" value="{{ Input::old('company') }}">
+										<label class="select">
+											<select name="operator">
+												<option value="" selected="" disabled="">Assign Operator</option>
+												  @if (!empty($operators))
+                                       				@foreach($operators as $row)
+                                       					<option value="{{ $row->user_id }}">{{ $row->user->username }}</option>
+                                       				@endforeach	
+                                       			  @endif	 
+											</select> <i></i> 
 										</label>
 									</section>
 								</div>
 
 							</fieldset>
-							
+
 							<header>Player Credits</header>
 
 							<fieldset>

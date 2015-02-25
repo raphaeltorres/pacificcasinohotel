@@ -11,8 +11,7 @@ class Gamechannel extends Eloquent {
 
 	protected $fillable = array(
 		'channel_id',
-		'game_id', 
-		'operator_id',
+		'table_id',
 		'channel_status'
 	);
 
@@ -20,19 +19,19 @@ class Gamechannel extends Eloquent {
 	
 	public $timestamps = true;
 
-	public function gamedetails()
+	public function tabledetails()
 	{
-		return $this->belongsto('Games','game_id');
-	}
-
-	public function operator()
-	{
-		return $this->belongsto('User','operator_id')->select('id','username','fullname','email');
+		return $this->belongsTo('Gametables','table_id');
 	}
 
 	public function bets()
 	{
 		return $this->hasMany('Gamebets','channel_id','id');
 	}
+
+	public function scopeOpenchannel($query)
+    {
+        return $query->where('channel_status' , 1);
+    }
 
 }

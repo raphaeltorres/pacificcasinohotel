@@ -68,7 +68,7 @@
 															<ul class="list-unstyled">
 																<li>
 																	<p class="text-muted">
-																		<i class="fa fa-user"></i>&nbsp;&nbsp;<span class="txt-color-darken game_id">{{ $gamedetails->operator->username }}</span>
+																		<i class="fa fa-user"></i>&nbsp;&nbsp;<span class="txt-color-darken game_id">{{ $gamedetails->tabledetails->operator->username }}</span>
 																	</p>
 																</li>
 																<li>

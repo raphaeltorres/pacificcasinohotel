@@ -16,11 +16,12 @@ class CreateGameChannelTable extends Migration {
         {
         	$table->increments('id');
 	        $table->string('channel_id', 36);
-	      	$table->integer('game_id',false)->unsigned();
-	      	$table->integer('operator_id',false)->unsigned();
+	        $table->integer('table_id',false)->unsigned();
+	      	// $table->integer('operator_id',false)->unsigned();
 	      	$table->tinyInteger('channel_status')->default('1');
-	      	$table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');
-	      	$table->foreign('operator_id')->references('id')->on('acl_users')->onDelete('cascade');
+	      	// $table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');
+	      	// $table->foreign('operator_id')->references('id')->on('acl_users')->onDelete('cascade');
+	      	$table->foreign('table_id')->references('id')->on('game_tables')->onDelete('cascade');
 	        $table->timestamps();
 		});
 	}
