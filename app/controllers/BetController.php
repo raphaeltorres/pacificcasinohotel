@@ -67,35 +67,79 @@ class BetController extends \BaseController {
 			return Redirect::action('dashboard');
 		}
 
-		if(Input::has('betnumber'))
+		$param 	 	 = Input::only('bettype','betnumber','amount','game_id');
+		$retrieve 	 = Wallet::where('account_id', Auth::user()->id)->first();
+		$bet_type 	 = array('straight','split','line','square','basket','doublestreet');
+
+		if($retrieve->credits >= $param['amount'])
 		{
-			$bet_type = array('straight','split','line','square','basket','doublestreet');
-
-			$param = Input::only('betnumber','amount','game_id');
-
-			if(count($param['betnumber']) >= 0 && count($param['betnumber']) <= 6)
+			if(Input::has('betnumber'))
 			{
-				$retrieve = Wallet::where('account_id', Auth::user()->id)->first();
-				$index 	  = count($param['betnumber']) - 1;
+				if(count($param['betnumber']) >= 0 && count($param['betnumber']) <= 6)
+				{
+					$retrieve = Wallet::where('account_id', Auth::user()->id)->first();
+					$index 	  = count($param['betnumber']) - 1;
 
-				try{
-					$update = $retrieve->decrement('credits', (float) $param['amount']);
+					try{
+						$update = $retrieve->decrement('credits', (float) $param['amount']);
 
-					$fundinout = array(
+						$fundinout = array(
 						 	'wallet_id' 	=>  $retrieve->id, 
 						 	'onbehalf'  	=>  Auth::user()->id,
 						 	'credits'		=>  $param['amount'],
 						 	'description'	=> 'Bet on Roulette amount of $' . (float) $param['amount'],
 						 	'fundtype'		=> 'bet');
 
+						$fundout = Fundinout::create($fundinout);
+
+						$bet = array(
+							'player_id'  => Auth::user()->id,
+							'channel_id' => $param['game_id'],
+							'bet_number' => implode(',' , $param['betnumber']),
+							'bet_amount' => $param['amount'],
+							'bet_type'  =>  $bet_type[$index],
+							);
+
+						Gamebets::create($bet);
+
+					$message = 'Bet has been successfully place.';
+					return Redirect::action('bet.roulette')->with('success', $message);		
+				
+					}
+					catch(Exception $e){
+						return false;
+					}
+				}
+				else
+				{
+					return Redirect::action('bet.roulette')->with('error', 'You can only place maximum of 6 number.');
+				}
+
+			}
+
+			if (Input::has('bettype'))
+			{
+				$param 	  = Input::only('bettype','amount','game_id');
+				$retrieve = Wallet::where('account_id', Auth::user()->id)->first();
+
+				try{
+					$update = $retrieve->decrement('credits', (float) $param['amount']);
+
+					$fundinout = array(
+						 'wallet_id' 	=>  $retrieve->id, 
+						 'onbehalf'  	=>  Auth::user()->id,
+						 'credits'		=>  $param['amount'],
+						 'description'	=> 'Bet on Roulette amount of $' . (float) $param['amount'],
+						 'fundtype'		=> 'bet');
+
 					$fundout = Fundinout::create($fundinout);
 
 					$bet = array(
 						'player_id'  => Auth::user()->id,
 						'channel_id' => $param['game_id'],
-						'bet_number' => implode(',' , $param['betnumber']),
+						'bet_number' => $param['bettype'],
 						'bet_amount' => $param['amount'],
-						'bet_type'  =>  $bet_type[$index],
+						'bet_type'  => $param['bettype'],
 						);
 
 					Gamebets::create($bet);
@@ -103,60 +147,16 @@ class BetController extends \BaseController {
 					$message = 'Bet has been successfully place.';
 					return Redirect::action('bet.roulette')->with('success', $message);		
 				
-				}
-				catch(Exception $e){
-					return false;
-				}
+					}
+					catch(Exception $e){
+						return false;
+					}
 			}
-			else
-			{
-				return Redirect::action('bet.roulette')->with('error', 'You can only place maximum of 6 number.');
-			}
-
-
-			echo json_encode(Input::all());
-			exit;
 		}
-
-
-		if (Input::has('bettype'))
+		else
 		{
-			
-			$param 	  = Input::only('bettype','amount','game_id');
-			$retrieve = Wallet::where('account_id', Auth::user()->id)->first();
-
-			try{
-				$update = $retrieve->decrement('credits', (float) $param['amount']);
-
-				$fundinout = array(
-						 	'wallet_id' 	=>  $retrieve->id, 
-						 	'onbehalf'  	=>  Auth::user()->id,
-						 	'credits'		=>  $param['amount'],
-						 	'description'	=> 'Bet on Roulette amount of $' . (float) $param['amount'],
-						 	'fundtype'		=> 'bet');
-
-				$fundout = Fundinout::create($fundinout);
-
-				$bet = array(
-					'player_id'  => Auth::user()->id,
-					'channel_id' => $param['game_id'],
-					'bet_number' => $param['bettype'],
-					'bet_amount' => $param['amount'],
-					'bet_type'  => $param['bettype'],
-					);
-
-				Gamebets::create($bet);
-
-				$message = 'Bet has been successfully place.';
-				return Redirect::action('bet.roulette')->with('success', $message);		
-				
-				}
-				catch(Exception $e){
-					return false;
-				}
+			return Redirect::action('bet.roulette')->with('error', 'Insufficient credits!');
 		}
-
 	}
-
 
 }
