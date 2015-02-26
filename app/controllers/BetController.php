@@ -24,29 +24,34 @@ class BetController extends \BaseController {
 			return Redirect::action('dashboard');
 		}
 
-		$player_operator = Playeroperators::with('tabledetails')->where('player_id', Auth::user()->id)->get()->first();
-		$gamedetails     = Gamechannel::with('tabledetails.operator','tabledetails.gamedetails')->openchannel()->where('table_id' , $player_operator->tabledetails->id)->take(1)->get()->first();
-		$playerdetails   = User::with('wallet')->where('id', Auth::user()->id)->get()->first();
-
-
-		if(!empty($gamedetails))
+		if(Auth::user()->isPlayer())
 		{
-			$title  	   	 = Lang::get('Bet Roulette');
-			$form_open       = Form::open(array('method' => 'post','class' => 'smart-form', 'route' => array('bet.place'))); 
+			$player_operator = Playeroperators::with('tabledetails')->where('player_id', Auth::user()->id)->get()->first();
+			$gamedetails     = Gamechannel::with('tabledetails.operator','tabledetails.gamedetails')->openchannel()->where('table_id' , $player_operator->tabledetails->id)->take(1)->get()->first();
+			$playerdetails   = User::with('wallet')->where('id', Auth::user()->id)->get()->first();
+			
+			if(!empty($gamedetails))
+			{
+				$title  	   	 = Lang::get('Bet Roulette');
+				$form_open       = Form::open(array('method' => 'post','class' => 'smart-form', 'route' => array('bet.place'))); 
 
-			$data = array(
-				'title' 	   	  => $title,
-				'playerdetails'   => $playerdetails,
-				'gamedetails'	  => $gamedetails,
-				'formOpen'        => $form_open);
+				$data = array(
+					'title' 	   	  => $title,
+					'playerdetails'   => $playerdetails,
+					'gamedetails'	  => $gamedetails,
+					'formOpen'        => $form_open);
 
-			return View::make('bet/roulette', $data);
+				return View::make('bet/roulette', $data);
+			}
+			else
+			{
+				return App::abort(404, 'Operator haven\'t start the roulette game.');
+			}
 		}
 		else
 		{
-			return App::abort(404, 'Operator haven\'t start the roulette game.');
+			return App::abort(404, 'Your account is not a player account.');
 		}
-
 		
 	}
 

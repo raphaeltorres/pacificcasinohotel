@@ -265,4 +265,17 @@ class User extends Eloquent implements UserInterface{
         return false;
     }
 
+    public function isPlayer()
+    {
+        $isPlayer = UserMember::with('group')->where('user_id', Auth::user()->id)->get();
+
+        foreach ($isPlayer as $group) {
+           if (strpos(strtolower($group->group->name),'player') !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

@@ -17,8 +17,9 @@ class OperateContoller extends \BaseController {
 		
 		if(Auth::user()->isOperator())
 		{
-			$game  = Games::where('game_name', 'Roulette')->take(1)->get()->first();
-			$table = Gametables::where('operator_id', $this->operator_id)->take(1)->get()->first();
+			$game    = Games::where('game_name', 'Roulette')->take(1)->get()->first();
+			$table   = Gametables::where('operator_id', $this->operator_id)->take(1)->get()->first();
+			$players = Playeroperators::with('playerdetails','credits')->where('operator_id', $this->operator_id)->get();
 
 			if(!empty($table))
 			{
@@ -54,13 +55,14 @@ class OperateContoller extends \BaseController {
 				}
 			}
 
-			$title = Lang::get('Start Roulette Game');
+			$title = Lang::get('Start Game');
 
 			$data = array(
 				'title' 	   => $title,
 				'totalbets'	   => $totalbets,
 				'totalplayers' => $totalplayers,
-				'gamedetails'  => $gamedetails);
+				'gamedetails'  => $gamedetails,
+				'players'      => $players);
 
 				return View::make('operator/create', $data);
 			}
@@ -74,6 +76,78 @@ class OperateContoller extends \BaseController {
 		{
 			return App::abort(401, 'You are not a operator.');
 		}
+	}
+
+	public function deposit()
+	{
+		//retrieve POST value
+		$param = Input::only('credits','account_id');
+
+		$rules = array(
+			'credits'	 => 'required|numeric|min:1,max:1000000',
+			'account_id' => 'exists:acl_users,id');
+
+		$messages = array(
+			'buyer_id.exists'	 => 'Buyer id is not valid.',
+			'merchant_id.exists' => 'Merchant id is not valid');
+
+		$validator = Validator::make($param, $rules, $messages);
+
+		if ($validator->passes())
+		{
+			$retrieve = Wallet::where('account_id', $param['account_id'])->first();
+
+			$credits = array(
+				'account_id' => $param['account_id'],
+				'credits' 	 => $param['credits'], 
+			);
+
+			if(!empty($retrieve))
+			{
+				try{
+					$update = $retrieve->increment('credits', $param['credits']);
+
+					if($update == 1)
+					{
+						$fundin = array(
+						 'wallet_id' 	=> $retrieve->id, 
+						 'onbehalf'  	=> Auth::user()->id,
+						 'credits'		=> $param['credits'],
+						 'description'	=> 'Deposit credits',
+						 'fundtype'		=> 'fundin'
+						 );
+
+						$funds = Fundinout::create($fundin);
+					}
+				}
+				catch(Exception $e){
+					return false;
+				}
+			}
+			else
+			{
+				$add_credits = Wallet::create($credits);
+
+				$fundin = array(
+					'wallet_id' 	=> $add_credits->id, 
+					'onbehalf'  	=> Auth::user()->id,
+					'credits'		=> $param['credits'],
+					'description'	=> 'Deposit credits',
+					'fundtype'		=> 'fundin'
+				);
+
+				$funds = Fundinout::create($fundin);
+			}
+
+			$message = 'Credit has been successfully added.';
+			return Redirect::action('roulette.index')->with('success', $message);
+		}
+		else
+		{	
+			$messages = $validator->messages();
+			return Redirect::action('roulette.index')->with('error', $messages->all());
+		}
+
 	}
 
 }

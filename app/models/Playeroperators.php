@@ -33,4 +33,9 @@ class Playeroperators extends Eloquent {
 		return $this->belongsto('User','player_id')->select('id','username','fullname','email');
 	}
 
+	public function credits()
+	{
+		return $this->hasOne('Wallet', 'account_id' , 'player_id');
+	}
+
 }

@@ -8,6 +8,7 @@
 {{-- Content --}}
 @section('content')
 <div id="content">
+	@include('notifications')
 	<!-- row -->	
 		<div class="row">
 			<div class="col-sm-12">
@@ -25,7 +26,9 @@
 													<div id="myCarousel" class="carousel fade profile-carousel">
 														<div class="air air-bottom-right padding-10 button">
 														 <a href="javascript:void(0);" class="btn txt-color-white bg-color-teal btn-sm roulette-game" style="display:none;"><i class="fa fa-check"></i> Create Roulette Game</a>
-														 <a href="javascript:void(0);" id="smart-mod-eg1" class="button-winning btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-gift"></i> Winning Number</a>
+														 @if($totalplayers > 0)
+														 	<a href="javascript:void(0);" id="smart-mod-eg1" class="button-winning btn txt-color-white bg-color-pinkDark btn-sm"><i class="fa fa-gift"></i> Winning Number</a>
+														 @endif
 														</div>
 														<div class="air air-top-left padding-10">
 															<h4 class="txt-color-white font-md"></h4>
@@ -115,17 +118,75 @@
 											<div class="row">
 				
 												<div class="col-sm-12">
-				
+													<hr>
+
 													<div class="padding-10">
-				
-														<ul class="nav nav-tabs tabs-pull-left">
-															<li class="active pull-left">
+														
+														<ul class="nav nav-tabs tabs-pull-right">
+															<li>
+																<a href="#a2" data-toggle="tab">
+																<i class="fa fa-lg fa-arrow-circle-o-down text-danger"></i> 
+																<span class="hidden-mobile hidden-tablet"> Pending Payout </span> 
+																
+																</a>
+															</li>
+															<li class="active">
+																<a href="#a1" data-toggle="tab"> 
+																<i class="fa fa-lg fa-arrow-circle-o-up text-success"></i> 
+																<span class="hidden-mobile hidden-tablet"> Deposit </span> 
+																</a>
+															</li>
+															<li class="pull-left">
 																<span class="margin-top-10 display-inline">
-																<i class="fa fa-money text-success"></i> Current Bets </span>
+																<i class="fa fa-money text-success"></i> Credits</span>
 															</li>
 														</ul>
+														<!-- <ul class="nav nav-tabs tabs-pull-left">
+															<li class="active pull-left">
+																<span class="margin-top-10 display-inline">
+																<i class="fa fa-gamepad text-success"></i> My Players </span>
+															</li>
+														</ul>
+				 -->									
+				 									<div class="tab-content padding-top-10">
+															<div class="tab-pane fade in active" id="a1">
 				
-														<div class="tab-content padding-top-10">
+																<div class="row">
+				
+																	<div class="col-sm-12">
+																	<table class="table table-hover">
+																		<thead>
+																			<tr>
+																				<th>#</th>
+																				<th>Player Name</th>
+																				<th>Credits</th>
+																				<th>Action</th>
+																			</tr>
+																		</thead>
+																	<tbody>
+																		@if ($players->count() > 0)
+																		@foreach($players as $row)
+																		<tr>
+																			<td>{{ $row->player_id }}</td>
+																			<td>{{ $row->playerdetails->username }}</td>
+																			<td><i class="fa fa-fw fa-usd text-muted hidden-md hidden-sm hidden-xs"></i> {{ $row->credits->credits }}</td>
+																			<td><a href="#" data-type="text" data-pk="{{ $row->player_id }}" data-original-title="Add Credits" class= "btn btn-sm btn-success dialog_link"><span class="fa fa-plus-circle"></span></a></td>
+																		</tr>
+																		@endforeach
+																		@endif
+																	</tbody>
+																	</table>
+																</div>
+																	
+																</div>
+				
+															</div>
+
+															<div class="tab-pane fade" id="a2">
+				
+															</div><!-- end tab -->
+														</div>
+										<!-- 				<div class="tab-content padding-top-10">
 															<div class="tab-pane fade in active" id="a1">
 																
 																@if ($gamedetails->bets != null)
@@ -169,7 +230,7 @@
 																</div>
 				
 															</div>
-														</div>
+														</div> -->
 				
 													</div>
 				
@@ -236,5 +297,21 @@
 				</div>
 				
 				<!-- end row -->
+</div>
+
+<div id="dialog_simple" title="Dialog Simple Title" tabindex="-1">
+    <form id="add-credit-form" class="smart-form" method="POST" action="">
+            <fieldset>
+                <div class="form-group has-success">
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                            <input class="form-control wallet_credits" type="text" id="credits" name="credits">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <input type="hidden" name="option" value="deposit">                
+    </form> 
 </div>
 @stop

@@ -124,5 +124,6 @@ Route::group(array('prefix' => 'admin/v1/','before'=>'auth|auth.session|auth.sta
 	//Operate
 	Route::get('roulette', array('as'=>'roulette.index','uses' => 'OperateContoller@start'));
 	Route::get('roulette', array('as'=>'roulette.start','uses' => 'OperateContoller@start'));
+	Route::post('roulette', array('as'=>'roulette.deposit','uses' => 'OperateContoller@deposit'));
 
 });
