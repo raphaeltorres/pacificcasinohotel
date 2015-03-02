@@ -17,8 +17,6 @@ class ReportsController extends \BaseController {
 		$fundin 	 = Fundinout::with('wallet','wallet.playerdetails','operator')->where('fundtype', 'fundin')->get();
 		$title 		 = Lang::get('Bought Credits Report');
 
-		$depositList = $fundin->toArray();
-
 		$data = array(
 			'acl' 			=> ACL::buildACL(), 
 			'depositlist'   => $fundin,
@@ -27,14 +25,14 @@ class ReportsController extends \BaseController {
 		return View::make('reports/deposit',$data);
 	}
 
-	public function withdraw()
+	public function redeem()
 	{
-		if(ACL::checkUserPermission('reports.withdraw') == false){
+		if(ACL::checkUserPermission('reports.redeem') == false){
 			return Redirect::action('dashboard');
 		}
 
 		$funout 	 = Fundinout::with('wallet','wallet.playerdetails','operator')->where('fundtype', 'fundout')->get();
-		$title 		 = Lang::get('Reede Credits Report');
+		$title 		 = Lang::get('Reedemed Credits Report');
 		
 		$data = array(
 			'acl' 			=> ACL::buildACL(), 
@@ -42,6 +40,26 @@ class ReportsController extends \BaseController {
 			'title'			=> $title);
 
 		return View::make('reports/withdraw',$data);
+	}
+
+	public function winnings()
+	{
+		if(ACL::checkUserPermission('reports.winnings') == false){
+			return Redirect::action('dashboard');
+		}
+
+		$game_winnings = Gamewinnings::with('channel.tabledetails.operator')->get();
+		
+		$title 		   = Lang::get('Winning Numbers');
+
+		$data = array(
+			'acl' 			=> ACL::buildACL(), 
+			'winnings'  	=> $game_winnings,
+			'title'			=> $title);
+
+		return View::make('reports/winnings',$data);
+
+
 	}
 
 }

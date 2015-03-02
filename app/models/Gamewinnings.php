@@ -19,4 +19,8 @@ class Gamewinnings extends Eloquent {
 
 	public $timestamps = true;
 
+	public function channel()
+	{
+		return $this->belongsto('Gamechannel','channel_id','id');
+	}
 }

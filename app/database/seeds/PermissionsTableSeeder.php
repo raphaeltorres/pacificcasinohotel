@@ -185,16 +185,24 @@ class PermissionsTableSeeder extends Seeder {
         $permission->save();
 
         $permission = new Permission;
-        $permission->perm_name = 'Bought Credits';
-        $permission->perm_key  = 'reports.deposit';
-        $permission->perm_description = '';
+        $permission->perm_name = 'Winning Number';
+        $permission->perm_key  = 'reports.winnings';
+        $permission->perm_description = 'Game winning report';
         $permission->visible   = 1;
         $permission->date_created = new DateTime;
         $permission->save();
 
         $permission = new Permission;
         $permission->perm_name = 'Redeemed Credits';
-        $permission->perm_key  = 'reports.withdraw';
+        $permission->perm_key  = 'reports.redeem';
+        $permission->perm_description = '';
+        $permission->visible   = 1;
+        $permission->date_created = new DateTime;
+        $permission->save();
+
+        $permission = new Permission;
+        $permission->perm_name = 'Bought Credits';
+        $permission->perm_key  = 'reports.deposit';
         $permission->perm_description = '';
         $permission->visible   = 1;
         $permission->date_created = new DateTime;
