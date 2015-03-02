@@ -1,8 +1,5 @@
 $(document).ready(function() {
 
-      $("#loading").hide();
-      $("#content").show();
-
       $("#smart-mod-eg1").click(function(e) {
         $.SmartMessageBox({
           title : "Winning Number",
@@ -19,7 +16,7 @@ $(document).ready(function() {
               
               var gameid = $('.channel_id').text();
               $.ajax({ url: '/admin/v1/games/winnings',
-                data: {gameid: gameid, winning_number: winning_number},
+                data: { gameid: gameid, winning_number: winning_number },
                 type: 'GET',
                   success: function(response) {
                       var json = $.parseJSON(response);

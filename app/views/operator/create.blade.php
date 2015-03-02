@@ -314,4 +314,9 @@
             <input type="hidden" name="option" value="deposit">                
     </form> 
 </div>
+<script type="text/javascript">
+setTimeout(function(){
+   window.location.reload(1);
+}, 10000);
+</script>
 @stop
